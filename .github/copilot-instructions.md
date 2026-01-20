@@ -10,7 +10,7 @@ This repository contains an automated betting arbitrage system (surebet scraper)
   - `selenium` - Web automation
   - `undetected-chromedriver` - Chrome driver wrapper to avoid detection
   - `requests` - HTTP client for API calls
-  - Chrome WebDriver (version 143)
+  - Chrome browser (version 143 via undetected-chromedriver)
 - **Supabase** - Cloud database and Edge Functions for data storage
 - **Chrome DevTools Protocol (CDP)** - For advanced browser automation
 
@@ -121,7 +121,7 @@ When adding new workers:
 
 ### State Management
 
-- **Bootstrap phase**: First ~50 seconds after start, only collect IDs, no saves/updates/deletes
+- **Bootstrap phase**: First 50 seconds after start, only collect IDs, no saves/updates/deletes
 - **Active IDs**: Maintain in memory (`active_ids`) and persist to `active_ids.txt`
 - **Seen IDs**: Track in `seen` set and `seen_ids.txt` with timestamps
 - **Link cache**: Store resolved betting links in `link_cache.json` for fast lookup
@@ -172,8 +172,8 @@ Currently, this project does not have automated tests. When adding features:
 ## Performance Considerations
 
 1. **Tab management**: The system maintains multiple browser tabs (main, group pages, next pages). Excessive tabs can cause memory issues.
-2. **CDP polling**: Target inspection happens every ~150ms, adjust `CDP_POLL_INTERVAL` if needed
-3. **Bootstrap phase**: Initial data collection takes ~50 seconds, don't skip this
+2. **CDP polling**: Target inspection happens every 150ms, adjust `CDP_POLL_INTERVAL` if needed
+3. **Bootstrap phase**: Initial data collection takes 50 seconds, don't skip this
 4. **Batching**: HTTP operations are batched to reduce API calls
 5. **Account rotation**: System restarts every ~32 minutes to rotate accounts
 

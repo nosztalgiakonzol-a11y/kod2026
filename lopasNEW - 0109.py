@@ -3933,6 +3933,9 @@ if __name__ == "__main__":
     # NAV worker: csak BOOTSTRAP UTÁN indul
     nav_thread = None
     nav_started = False
+    
+    # Bootstrap cleanup flag - csak egyszer futtatjuk a bootstrap után
+    bootstrap_cleanup_done = False
 
     # GROUP/NEXT tab-nyitó háttér worker
     groupnext_thread = threading.Thread(target=group_next_opener_worker, daemon=True)
@@ -4199,6 +4202,18 @@ if __name__ == "__main__":
                 nav_thread.start()
                 log("🚀 NAV háttér worker elindítva (BOOTSTRAP után)")
                 nav_started = True
+
+            # 🧹 BOOTSTRAP utáni tisztítás: csak egyszer, közvetlenül a bootstrap után
+            if not bootstrap_cleanup_done and not bootstrap:
+                log("🧹 BOOTSTRAP fázis befejeződött – indítás utáni cleanup elindítva...")
+                try:
+                    full_resync_and_cleanup()
+                    bootstrap_cleanup_done = True
+                    log("✅ Bootstrap utáni cleanup befejezve")
+                except Exception as e:
+                    warn(f"⚠️ Bootstrap cleanup hiba: {e}")
+                    # Ha hiba van, ne próbáljuk újra
+                    bootstrap_cleanup_done = True
 
             prev_ids_main = curr_ids_main
             time.sleep(CHECK_INTERVAL)
